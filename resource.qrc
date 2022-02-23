@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>font/douyuFont.otf</file>
+        <file>font/HarmonyOS_Sans_Black.ttf</file>
+        <file>font/HarmonyOS_Sans_Black_Italic.ttf</file>
+        <file>font/HarmonyOS_Sans_Bold.ttf</file>
+        <file>font/HarmonyOS_Sans_Bold_Italic.ttf</file>
+        <file>font/HarmonyOS_Sans_SC_Black.ttf</file>
+        <file>font/HarmonyOS_Sans_SC_Bold.ttf</file>
+        <file>font/NotoSansDisplay-CondensedBlack.ttf</file>
+        <file>font/NotoSansDisplay-CondensedBlackItalic.ttf</file>
+        <file>font/NotoSansDisplay-CondensedBold.ttf</file>
+        <file>font/NotoSansDisplay-CondensedBoldItalic.ttf</file>
+        <file>font/NotoSansDisplay-CondensedExtraBold.ttf</file>
+        <file>font/NotoSansDisplay-CondensedExtraBoldItalic.ttf</file>
+        <file>font/NotoSansDisplay-ExtraBold.ttf</file>
+        <file>font/NotoSansDisplay-ExtraBoldItalic.ttf</file>
+        <file>font/NotoSansDisplay-ExtraCondensedBlack.ttf</file>
+        <file>font/NotoSansDisplay-ExtraCondensedBlackItalic.ttf</file>
+        <file>font/pangmenzhengdao.ttf</file>
+        <file>images/sys2.ico</file>
+    </qresource>
+</RCC>

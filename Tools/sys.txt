@@ -1,0 +1,137 @@
+//#ifndef TOOL_SYSTEM_H
+//#define TOOL_SYSTEM_H
+
+////#include "stdafx.h"
+//#define INITGUID  //Include this #define to use SystemTraceControlGuid in Evntrace.h.
+//#include <Windows.h>
+//#include <wmistr.h>
+//#include <evntrace.h>
+//#include <evntcons.h>
+//#include <tchar.h>
+//#include <strsafe.h>
+
+//#define LOGFILE_PATH    L"kernellogfile.etl"
+//#define ETL_FILE        L"G:\\OpenSource\\GitHub\\WindowsSDK7-Samples\\winbase\\Eventing\\EtwConsumer\\Output\\16.pdf.etl"
+//#define __REAL_TIME_MODE
+///* 不同类型的GUID，从MSDN手册中找，固定的 */
+//DEFINE_GUID ( /* 3d6fa8d0-fe05-11d0-9dda-00c04fd7ba7c */
+//ProcessGuid,
+//0x3d6fa8d0,
+//0xfe05,
+//0x11d0,
+//0x9d, 0xda, 0x00, 0xc0, 0x4f, 0xd7, 0xba, 0x7c
+//);
+//ULONG WINAPI BufferCallback(PEVENT_TRACE_LOGFILE LogFile )
+//{
+//    printf( "BufferCallback!\n" );
+//    return TRUE;
+//}
+///* 可以调用SetTraceCallback 设置单独事件GUID的回调函数，即使如此，EventCallback仍然会收到所有的事件 */
+//VOID WINAPI EventRecordCallback(PEVENT_RECORD Event )
+//{
+//    if ( IsEqualGUID( Event->EventHeader.ProviderId, ProcessGuid ) )
+//    {
+//    /* 需要解析数据格式 */
+//    printf( "EventRecordCallback  ProcessGuid!\n" );
+//    }
+//    printf( "EventRecordCallback!\n" );
+//}
+
+//VOID WINAPI EventCallback( PEVENT_TRACE pEvent )
+//{
+//printf( "EventCallback!\n" );
+//}
+
+//VOID EventConsumer()
+//{
+//    TRACEHANDLE hTrace = NULL;
+//    EVENT_TRACE_LOGFILE traceFile;
+//    #ifdef __REAL_TIME_MODE
+//    traceFile.LogFileName = NULL;
+//    traceFile.LoggerName  = KERNEL_LOGGER_NAME;
+//    traceFile.ProcessTraceMode = PROCESS_TRACE_MODE_REAL_TIME | PROCESS_TRACE_MODE_EVENT_RECORD;
+//    #else
+//    traceFile.LogFileName = ETL_FILE;
+//    traceFile.LoggerName = NULL;
+//    traceFile.ProcessTraceMode = PROCESS_TRACE_MODE_EVENT_RECORD;
+//    #endif
+//    traceFile.BufferCallback        = BufferCallback;
+//    traceFile.EventCallback         = EventCallback;
+//    if ( traceFile.ProcessTraceMode & PROCESS_TRACE_MODE_EVENT_RECORD )
+//    traceFile.EventRecordCallback   = EventRecordCallback;
+//    traceFile.Context = NULL;
+//    hTrace = OpenTrace( &traceFile );
+//    if ( hTrace == (TRACEHANDLE)INVALID_HANDLE_VALUE || hTrace == 0x0 )
+//    return ;
+//    ULONG status = ProcessTrace( &hTrace, 1, NULL, NULL );
+//}
+//void EventController(void)
+//{
+//    ULONG status = ERROR_SUCCESS;
+//    TRACEHANDLE SessionHandle = 0;
+//    EVENT_TRACE_PROPERTIES* pSessionProperties = NULL;
+//    ULONG BufferSize = 0;
+//    BufferSize = sizeof(EVENT_TRACE_PROPERTIES) + sizeof(KERNEL_LOGGER_NAME) + sizeof(LOGFILE_PATH) ;
+//    pSessionProperties = (EVENT_TRACE_PROPERTIES*) malloc(BufferSize);
+//    if (NULL == pSessionProperties)
+//    {
+//        wprintf(L"Unable to allocate %d bytes for properties structure.\n", BufferSize);
+//        goto cleanup;
+//    }
+//    ZeroMemory(pSessionProperties, BufferSize);
+//    pSessionProperties->Wnode.BufferSize    = BufferSize;
+//    pSessionProperties->Wnode.Flags         = WNODE_FLAG_TRACED_GUID;
+//    pSessionProperties->Wnode.ClientContext = 1; //QPC clock resolution
+//    pSessionProperties->Wnode.Guid          = SystemTraceControlGuid;
+//    pSessionProperties->EnableFlags         = EVENT_TRACE_FLAG_PROCESS;                 // 关注事件
+//    #ifdef __REAL_TIME_MODE
+//        pSessionProperties->LogFileMode         = EVENT_TRACE_REAL_TIME_MODE;               // EVENT_TRACE_USE_PAGED_MEMORY 该标识在win7上会导致失败
+//    #else
+//        pSessionProperties->LogFileMode         = EVENT_TRACE_FILE_MODE_CIRCULAR;
+//    #endif
+//    pSessionProperties->MaximumFileSize     = 5;  // 5 MB
+//    pSessionProperties->LoggerNameOffset    = sizeof(EVENT_TRACE_PROPERTIES);
+//    pSessionProperties->LogFileNameOffset   = sizeof(EVENT_TRACE_PROPERTIES) + sizeof(KERNEL_LOGGER_NAME);
+//    #ifndef __REAL_TIME_MODE            // 也可在RealTime模式下开启，但是没必要RealTime都记录到文件
+//        StringCbCopy((LPWSTR)((char*)pSessionProperties + pSessionProperties->LogFileNameOffset), sizeof(LOGFILE_PATH), LOGFILE_PATH);
+//    #endif
+//    status = StartTrace((PTRACEHANDLE)&SessionHandle, KERNEL_LOGGER_NAME, pSessionProperties);
+//    if (ERROR_SUCCESS != status)
+//    {
+//        if (ERROR_ALREADY_EXISTS == status)
+//            wprintf(L"The NT Kernel Logger session is already in use.\n");
+//        else
+//            wprintf(L"EnableTrace() failed with %lu\n", status);
+//        goto cleanup;
+//    }
+//    EventConsumer();
+////    wprintf(L"Press any key to end trace session ");
+////    getchar();
+//    cleanup:
+//    if (SessionHandle)
+//    {
+//        status = ControlTrace(SessionHandle, KERNEL_LOGGER_NAME, pSessionProperties, EVENT_TRACE_CONTROL_STOP);
+//        if (ERROR_SUCCESS != status)
+//            wprintf(L"ControlTrace(stop) failed with %lu\n", status);
+//    }
+//    else
+//    {
+//        /* 开启会话后，若不关闭，即使进程退出，依然会保持开启状态，单独关闭可使用如下方式 */
+//        status = ControlTrace(NULL, KERNEL_LOGGER_NAME, pSessionProperties, EVENT_TRACE_CONTROL_STOP);
+//        if (ERROR_SUCCESS != status)
+//            wprintf(L"ControlTrace(stop) failed with %lu\n", status);
+//    }
+//    if (pSessionProperties)
+//        free(pSessionProperties);
+//}
+////int _tmain(int argc, _TCHAR* argv[])
+////{
+////    EventController();
+////    //EventConsumer();
+////    while (true)
+////    {
+////    Sleep(300000);
+////    }
+////    return 0;
+////}
+//#endif // TOOL_SYSTEM_H
